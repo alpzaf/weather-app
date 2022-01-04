@@ -11,7 +11,9 @@
     </div>
     <div class="weather">
       <h1>{{ data.city }}</h1>
-      <h1>{{ data.weather }}&deg;</h1>
+      <h1>
+        {{ Math.round(data.weather) }}<span v-if="data.weather">&deg;</span>
+      </h1>
       <h2>{{ data.desc }}</h2>
       <h3>{{ data.detail }}</h3>
     </div>
@@ -32,19 +34,15 @@ export default {
 
     let weatherData = [];
 
-    const apiURL = "https://api.openweathermap.org/data/2.5/weather";
-    const apiKey = "";
+    const apiURL = "http://localhost:3000/";
 
     const getWeather = () => {
-      axios(`${apiURL}?units=metric&q=${data.city}&appid=${apiKey}`).then(
-        (response) => {
-          data.weather = response.data.main.temp;
-          data.city = response.data.name;
-          data.desc = response.data.weather[0].main;
-          data.detail = response.data.weather[0].description;
-          console.log(response.data);
-        }
-      );
+      axios(`${apiURL}?units=metric&q=${data.city}`).then((response) => {
+        data.weather = response.data.main.temp;
+        data.city = response.data.name;
+        data.desc = response.data.weather[0].main;
+        data.detail = response.data.weather[0].description;
+      });
     };
 
     return {
