@@ -10,9 +10,10 @@
       />
     </div>
     <div class="weather">
-      <h1>6&deg;</h1>
-      <h2>Cloudy</h2>
-      <h3>Lots of Clouds</h3>
+      <h1>{{ data.city }}</h1>
+      <h1>{{ data.weather }}&deg;</h1>
+      <h2>{{ data.desc }}</h2>
+      <h3>{{ data.detail }}</h3>
     </div>
   </div>
 </template>
@@ -25,18 +26,30 @@ export default {
     let data = reactive({
       city: "",
       weather: null,
+      desc: "",
+      detail: "",
     });
 
+    let weatherData = [];
+
+    const apiURL = "https://api.openweathermap.org/data/2.5/weather";
+    const apiKey = "";
+
     const getWeather = () => {
-      axios(
-        "https://api.openweathermap.org/data/2.5/weather?units=metric&q=istanbul&appid=66ba8a1b533a7a22400f6b465181d348"
-      ).then((response) => {
-        console.log(response.data);
-      });
+      axios(`${apiURL}?units=metric&q=${data.city}&appid=${apiKey}`).then(
+        (response) => {
+          data.weather = response.data.main.temp;
+          data.city = response.data.name;
+          data.desc = response.data.weather[0].main;
+          data.detail = response.data.weather[0].description;
+          console.log(response.data);
+        }
+      );
     };
 
     return {
       data,
+      weatherData,
       getWeather,
     };
   },
